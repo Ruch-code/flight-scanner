@@ -25,14 +25,15 @@ export interface BookingPortal {
 
 const fmtCompact = (d: string) => d.replace(/-/g, '');
 const fmtSlash = (d: string) => d.split('-').reverse().join('/');
-const fmtDmy = (d: string) => {
-  const [y, m, dd] = d.split('-');
-  return `${dd}${m}${y}`;
-};
 const fmtDmyShort = (d: string) => {
   const [, m, dd] = d.split('-');
   return `${dd}${m}${d.slice(2, 4)}`;
 };
+
+const ibiboParams = (p: BookingContext) =>
+  `tripType=${p.tripType === 'round-trip' ? 'R' : 'O'}&itinerary=${p.origin}-${p.destination}-${fmtSlash(p.departureDate)}${
+    p.returnDate ? '-' + fmtSlash(p.returnDate) : ''
+  }&paxType=A-${p.passengers}_C-0_I-0&cabinClass=${classCode(p.class)}&intl=false`;
 
 export function classCode(pClass: BookingContext['class']): string {
   switch (pClass) {
@@ -94,11 +95,7 @@ const portals: BookingPortal[] = [
     description: 'Apply MMT + bank coupons at checkout. Big savings on India routes.',
     regions: ['india', 'intl'],
     couponPlatforms: ['MakeMyTrip'],
-    buildUrl: (p, currency) => {
-      const trip = p.tripType === 'round-trip' ? 'R' : 'O';
-      const itinerary = `${p.origin}-${p.destination}-${fmtDmy(p.departureDate)}${p.returnDate ? '-' + fmtDmy(p.returnDate) : ''}`;
-      return `https://www.makemytrip.com/flight/search?itinerary=${itinerary}&tripType=${trip}&pax=A:${p.passengers}&cabinClass=${classCode(p.class)}&intl=${p.origin === 'DEL' || p.origin === 'BOM' || p.origin === 'BLR' ? 'false' : 'false'}`;
-    },
+    buildUrl: (p) => `https://www.makemytrip.com/flight/search?${ibiboParams(p)}`,
   },
   {
     id: 'cleartrip',
@@ -107,9 +104,11 @@ const portals: BookingPortal[] = [
     description: 'Zero-convenience-fee bookings on many flights. Stack bank offers.',
     regions: ['india', 'intl'],
     couponPlatforms: ['Cleartrip'],
-    buildUrl: (p, currency) => {
-      let url = `https://www.cleartrip.com/flights/results?origin=${p.origin}&destination=${p.destination}&departDate=${p.departureDate}&adults=${p.passengers}&class=${capitalizeClass(p.class)}`;
-      if (p.returnDate) url += `&returnDate=${p.returnDate}&returnAdults=${p.passengers}`;
+    buildUrl: (p) => {
+      let url = `https://www.cleartrip.com/flights/results?origin=${p.origin}&destination=${p.destination}&departDate=${fmtSlash(p.departureDate)}&adults=${p.passengers}&class=${capitalizeClass(p.class)}&intl=n${
+        p.tripType === 'round-trip' ? '&tripType=R' : ''
+      }`;
+      if (p.returnDate) url += `&returnDate=${fmtSlash(p.returnDate)}`;
       return url;
     },
   },
@@ -120,8 +119,11 @@ const portals: BookingPortal[] = [
     description: 'Frequent flat-discount codes on domestic round-trips.',
     regions: ['india'],
     couponPlatforms: ['Yatra'],
-    buildUrl: (p, currency) =>
-      `https://www.yatra.com/flight-booking/results?origin=${p.origin}&destination=${p.destination}&startDate=${fmtSlash(p.departureDate)}&adultCount=${p.passengers}&class=${capitalizeClass(p.class)}`,
+    buildUrl: (p) => {
+      let url = `https://www.yatra.com/flight-booking/results?origin=${p.origin}&destination=${p.destination}&startDate=${fmtSlash(p.departureDate)}&adultCount=${p.passengers}&childCount=0&infantCount=0&cabin_class=${capitalizeClass(p.class)}&stops=ALL&airlines=ALL&fareType=ALL&date=${fmtSlash(p.departureDate)}`;
+      if (p.returnDate) url += `&endDate=${fmtSlash(p.returnDate)}`;
+      return url;
+    },
   },
   {
     id: 'goibibo',
@@ -131,7 +133,7 @@ const portals: BookingPortal[] = [
     regions: ['india'],
     couponPlatforms: ['Goibibo'],
     buildUrl: (p, currency) =>
-      `https://www.goibibo.com/flights/?itinerary=${p.origin}-${p.destination}-${fmtCompact(p.departureDate)}`,
+      `https://www.goibibo.com/flight/search?${ibiboParams(p)}&sTime=${Date.now()}&forwardFlowRequired=true&action=FLTSRCH`,
   },
   {
     id: 'expedia',

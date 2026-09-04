@@ -80,3 +80,51 @@ export interface BankWeekend {
 }
 
 export type Currency = 'USD' | 'INR';
+
+export interface Attraction {
+  id: string;
+  name: string;
+  emoji: string;
+  category: string;
+  entryCostUsd: number;
+  hours: string;
+  blurb: string;
+}
+
+export interface FoodHighlight {
+  name: string;
+  emoji: string;
+  costUsd: number;
+}
+
+export interface TripDayItem {
+  attraction: Attraction;
+  note: string;
+}
+
+export interface TripDay {
+  day: number;
+  theme: string;
+  items: TripDayItem[];
+  lunch: string;
+  dinner: string;
+  evening: string;
+}
+
+export interface DestinationGuide {
+  city: string;
+  airportIatas: string[];
+  country: string;
+  flag: string;
+  bestTime: string;
+  avgHotelUsd: number;
+  avgMealUsd: number;
+  avgTransportUsd: number;
+  intro: string;
+  tips: string[];
+  visaNote: string;
+  foodHighlights: FoodHighlight[];
+  attractions: Attraction[];
+  evenings: string[];
+  suggestedOrder: string[];
+}
