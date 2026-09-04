@@ -64,8 +64,8 @@ export const airports: Airport[] = [
 ];
 
 export function searchAirports(query: string): Airport[] {
-  if (!query || query.length < 1) return [];
-  const q = query.toLowerCase();
+  const q = (query || '').toLowerCase().trim();
+  if (!q) return getPopularAirports();
   return airports.filter(
     (a) =>
       a.iata.toLowerCase().includes(q) ||
@@ -73,6 +73,14 @@ export function searchAirports(query: string): Airport[] {
       a.name.toLowerCase().includes(q) ||
       a.country.toLowerCase().includes(q)
   ).slice(0, 8);
+}
+
+const POPULAR_AIRPORT_IATAS = ['DEL', 'BOM', 'BLR', 'MAA', 'CCU', 'HYD', 'GOI', 'JFK', 'LAX', 'ORD', 'SFO', 'LHR', 'DXB', 'SIN', 'BKK', 'CDG'];
+
+export function getPopularAirports(): Airport[] {
+  const popular = POPULAR_AIRPORT_IATAS.map((iata) => airports.find((a) => a.iata === iata)).filter((a): a is Airport => Boolean(a));
+  const rest = airports.filter((a) => !POPULAR_AIRPORT_IATAS.includes(a.iata));
+  return [...popular, ...rest];
 }
 
 export function getAirportByIata(iata: string): Airport | undefined {

@@ -91,7 +91,8 @@ function AirportSearch({ label, value, onChange, placeholder = 'Search city or a
       )}
       {open && results.length === 0 && (
         <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-sm text-gray-500">
-          No airports found. Try another city or IATA code.
+          <p className="font-medium text-gray-700 mb-1">No airports found for "{query.trim()}"</p>
+          <p>Try a city name (e.g. Delhi), country, or 3-letter IATA code. Example: DEL, LHR, JFK</p>
         </div>
       )}
     </div>
