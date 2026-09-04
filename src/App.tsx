@@ -4,10 +4,6 @@ import FlightResults from './components/FlightResults';
 import CouponPanel from './components/CouponPanel';
 import AboutMe from './components/AboutMe';
 import CurrencyToggle from './components/CurrencyToggle';
-import MarketClock from './components/MarketClock';
-import MarketDesk from './components/MarketDesk';
-import StockSignals from './components/StockSignals';
-import MarketNews from './components/MarketNews';
 import { useFlightSearch } from './hooks/useFlightSearch';
 import { useCurrency } from './hooks/useCurrency';
 import { FlightSearchParams } from './types';
@@ -124,18 +120,6 @@ function App() {
         <section className="mt-6">
           <CouponPanel />
         </section>
-
-        {/* Live Market Desk */}
-        <div className="border-t border-dashed border-gray-300 mt-10 pt-8">
-          <h2 className="text-2xl font-black text-gray-900 mb-5 flex items-center gap-2">
-            <span>🧭</span> SkySaver Investor Desk
-            <span className="text-xs font-medium text-gray-400 font-dood">Your simple window on the markets</span>
-          </h2>
-          <MarketClock />
-          <MarketDesk />
-          <StockSignals />
-          <MarketNews />
-        </div>
 
         {/* Colorful airplane that flies to About */}
         <section className="mt-10">

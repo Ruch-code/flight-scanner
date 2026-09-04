@@ -89,7 +89,16 @@ function FlightResults({ flights, loading, error, note, origin, destination, cur
 
   return (
     <div>
-      <BookingAdvisor routeType={routeType} departureDate={departureDate} />
+      <BookingAdvisor
+        routeType={routeType}
+        departureDate={departureDate}
+        origin={origin}
+        destination={destination}
+        currency={currency}
+        tripType={booking.tripType}
+        returnDate={booking.returnDate}
+        cls={booking.class}
+      />
 
       {note && (
         <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 text-sm text-amber-900">

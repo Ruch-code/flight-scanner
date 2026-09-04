@@ -1,13 +1,37 @@
+import { useEffect } from 'react';
 import { getBookingAdvice, getPriceLevelColor } from '../data/bookingWindows';
+import { useFareTrends } from '../hooks/useFareTrends';
+import FareTrendChart from './FareTrendChart';
 
 interface Props {
   routeType: 'domestic-india' | 'domestic-us' | 'international';
   departureDate: string;
+  origin: string;
+  destination: string;
+  currency: 'USD' | 'INR';
+  tripType: 'one-way' | 'round-trip';
+  returnDate?: string;
+  cls: 'economy' | 'premium-economy' | 'business' | 'first';
 }
 
-function BookingAdvisor({ routeType, departureDate }: Props) {
+function BookingAdvisor({
+  routeType,
+  departureDate,
+  origin,
+  destination,
+  currency,
+  tripType,
+  returnDate,
+  cls,
+}: Props) {
   const advice = getBookingAdvice(routeType);
   const levelColors = getPriceLevelColor(advice.priceLevel);
+  const { data: trends, loading: trendsLoading, error: trendsError, loadTrends } = useFareTrends();
+
+  useEffect(() => {
+    if (!origin || !destination || !departureDate) return;
+    loadTrends({ origin, destination, departureDate, returnDate, tripType, cls, currency });
+  }, [origin, destination, departureDate, returnDate, tripType, cls, currency, loadTrends]);
 
   const getDaysUntil = () => {
     if (!departureDate) return null;
@@ -67,6 +91,20 @@ function BookingAdvisor({ routeType, departureDate }: Props) {
           <p className="text-sm text-gray-600 mt-2">{advice.dayOfWeekTip}</p>
         </div>
       </div>
+
+      {trends && <FareTrendChart trends={trends} currency={currency} userDate={departureDate} />}
+
+      {trendsLoading && (
+        <div className="mt-6 rounded-xl border border-dashed border-gray-300 p-6 flex items-center justify-center gap-2 text-gray-500 text-sm">
+          <span className="animate-float">✈️</span> Sampling live fares across the next few months…
+        </div>
+      )}
+
+      {trendsError && !trendsLoading && (
+        <div className="mt-6 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700">
+          😢 Live fare trend isn't available right now ({trendsError}). The static advice above still applies.
+        </div>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-4">
         <div className="flex-1 min-w-[200px]">
