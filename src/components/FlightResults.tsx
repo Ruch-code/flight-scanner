@@ -96,7 +96,7 @@ function FlightResults({ flights, loading, error, origin, destination, currency,
             {flights.length} flights found
           </h2>
           <p className="text-sm text-gray-500">
-            {origin} → {destination} · Live fares via Ignav API
+            {origin} → {destination}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
