@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.env.local
+.netlify
+.vite
+*.local
+.DS_Store
+# Netlify Functions internal deps
