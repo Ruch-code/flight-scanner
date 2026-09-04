@@ -9,7 +9,7 @@ import { useCurrency } from './hooks/useCurrency';
 import { FlightSearchParams } from './types';
 
 function App() {
-  const { flights, loading, error, searchFlights } = useFlightSearch();
+  const { flights, loading, error, note, searchFlights } = useFlightSearch();
   const { currency, setCurrencyValue } = useCurrency();
   const [lastSearch, setLastSearch] = useState<{
     origin: string;
@@ -98,6 +98,7 @@ function App() {
               flights={flights}
               loading={loading}
               error={error}
+              note={note}
               origin={lastSearch.origin}
               destination={lastSearch.destination}
               currency={currency}

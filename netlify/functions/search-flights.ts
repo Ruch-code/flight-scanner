@@ -107,38 +107,58 @@ export default async (req: Request, context: Context) => {
       return new Response(JSON.stringify({ error: 'INVALID_INPUT', message: 'Missing required fields' }), { status: 400 });
     }
 
-    const market = currency === 'INR' ? 'IN' : 'US';
+    const requestedMarket = currency === 'INR' ? 'IN' : 'US';
     const endpoint = tripType === 'round-trip' && returnDate ? `${BASE_URL}/fares/round-trip` : `${BASE_URL}/fares/one-way`;
 
-    const body: Record<string, unknown> = {
+    const baseBody: Record<string, unknown> = {
       origin,
       destination,
       departure_date: departureDate,
       adults: passengers || 1,
       cabin_class: cabinClass(cls),
-      market,
     };
 
     if (tripType === 'round-trip' && returnDate) {
-      body.return_date = returnDate;
+      baseBody.return_date = returnDate;
     }
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': apiKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+    // Ignav's INR fare engine intermittently returns 424 for some international
+    // one-way routes. Fall back to USD pricing (client converts it for display).
+    const markets = requestedMarket === 'IN' ? ['IN', 'US'] : ['US'];
 
-    const data: IgnavFareResponse = await response.json().catch(() => ({}));
+    let lastStatus = 0;
+    let lastDetail: string | null = null;
+    let data: IgnavFareResponse = {};
+    let marketUsed = requestedMarket;
 
-    if (!response.ok) {
+    for (const market of markets) {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...baseBody, market }),
+      });
+
+      const parsed: IgnavFareResponse = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        data = parsed;
+        marketUsed = market;
+        break;
+      }
+
+      lastStatus = response.status;
+      const err = (parsed as any).error;
+      lastDetail = (parsed as any).detail || (err && err.message) || null;
+    }
+
+    if (lastStatus !== 0 && !data.itineraries) {
       return new Response(
         JSON.stringify({
           error: 'UPSTREAM_ERROR',
-          message: data && (data as any).detail ? (data as any).detail : `Flight data provider returned ${response.status}. Please try again.`,
+          message: lastDetail || `Flight data provider returned ${lastStatus}. Please try again.`,
         }),
         { status: 502 }
       );
@@ -147,9 +167,17 @@ export default async (req: Request, context: Context) => {
     const itineraries = data.itineraries || [];
     const flights = itineraries.map((it) => normalizeItinerary(it, origin, destination));
 
-    return new Response(JSON.stringify({ flights, source: 'ignav' }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({
+        flights,
+        source: 'ignav',
+        marketUsed,
+        marketFallback: marketUsed !== requestedMarket,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
     console.error('search-flights error:', error);
     return new Response(

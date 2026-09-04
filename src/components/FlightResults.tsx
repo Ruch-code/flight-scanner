@@ -9,6 +9,7 @@ interface Props {
   flights: Flight[];
   loading: boolean;
   error: string | null;
+  note?: string | null;
   origin: string;
   destination: string;
   currency: 'USD' | 'INR';
@@ -18,7 +19,7 @@ interface Props {
 
 type SortKey = 'price' | 'duration' | 'stops' | 'departure';
 
-function FlightResults({ flights, loading, error, origin, destination, currency, departureDate, booking }: Props) {
+function FlightResults({ flights, loading, error, note, origin, destination, currency, departureDate, booking }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>('price');
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -89,6 +90,12 @@ function FlightResults({ flights, loading, error, origin, destination, currency,
   return (
     <div>
       <BookingAdvisor routeType={routeType} departureDate={departureDate} />
+
+      {note && (
+        <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 text-sm text-amber-900">
+          ℹ️ {note}
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4 mt-8">
         <div>
