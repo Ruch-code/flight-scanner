@@ -1,4 +1,5 @@
 import type { Context } from '@netlify/functions';
+import { isDomesticIndiaRoute, isDomesticUSRoute } from '../../src/data/airports';
 
 interface Flight {
   id: string;
@@ -33,11 +34,8 @@ const AIRLINES_BY_REGION: Record<string, string[]> = {
 };
 
 function generateMockFlights(origin: string, destination: string, date: string, passengers: number, currency: string): Flight[] {
-  const isDomesticIndia = ['DEL', 'BOM', 'BLR', 'MAA', 'CCU', 'HYD', 'GOI', 'COK', 'PNQ', 'AMD', 'JAI', 'LKO', 'TRV', 'IXC', 'PAT', 'BHO', 'NAG', 'GAU'].includes(origin) &&
-    ['DEL', 'BOM', 'BLR', 'MAA', 'CCU', 'HYD', 'GOI', 'COK', 'PNQ', 'AMD', 'JAI', 'LKO', 'TRV', 'IXC', 'PAT', 'BHO', 'NAG', 'GAU'].includes(destination);
-
-  const isDomesticUS = ['JFK', 'LAX', 'ORD', 'ATL', 'DFW', 'DEN', 'SFO', 'SEA', 'MIA', 'BOS', 'IAH', 'PHX', 'LAS', 'MSP', 'DTW'].includes(origin) &&
-    ['JFK', 'LAX', 'ORD', 'ATL', 'DFW', 'DEN', 'SFO', 'SEA', 'MIA', 'BOS', 'IAH', 'PHX', 'LAS', 'MSP', 'DTW'].includes(destination);
+  const isDomesticIndia = isDomesticIndiaRoute(origin, destination);
+  const isDomesticUS = isDomesticUSRoute(origin, destination);
 
   let region = 'international';
   let basePrice = currency === 'INR' ? 25000 : 400;

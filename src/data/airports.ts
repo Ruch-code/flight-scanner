@@ -1,66 +1,171 @@
 import { Airport } from '../types';
 
+type AirportSeed = [string, string, string, string];
+
+const INDIA_SEEDS: AirportSeed[] = [
+  ['DEL', 'Indira Gandhi International', 'New Delhi', 'India'],
+  ['BOM', 'Chhatrapati Shivaji Maharaj International', 'Mumbai', 'India'],
+  ['BLR', 'Kempegowda International', 'Bangalore', 'India'],
+  ['MAA', 'Chennai International', 'Chennai', 'India'],
+  ['CCU', 'Netaji Subhas Chandra Bose International', 'Kolkata', 'India'],
+  ['HYD', 'Rajiv Gandhi International', 'Hyderabad', 'India'],
+  ['GOI', 'Goa Dabolim International', 'Goa', 'India'],
+  ['GOX', 'Goa Mopa International', 'Goa', 'India'],
+  ['COK', 'Cochin International', 'Kochi', 'India'],
+  ['PNQ', 'Pune Airport', 'Pune', 'India'],
+  ['AMD', 'Sardar Vallabhbhai Patel International', 'Ahmedabad', 'India'],
+  ['JAI', 'Jaipur International', 'Jaipur', 'India'],
+  ['LKO', 'Chaudhary Charan Singh International', 'Lucknow', 'India'],
+  ['TRV', 'Trivandrum International', 'Thiruvananthapuram', 'India'],
+  ['IXC', 'Chandigarh Airport', 'Chandigarh', 'India'],
+  ['PAT', 'Lok Nayak Jayaprakash Airport', 'Patna', 'India'],
+  ['BHO', 'Raja Bhoj Airport', 'Bhopal', 'India'],
+  ['NAG', 'Dr. Babasaheb Ambedkar International', 'Nagpur', 'India'],
+  ['GAU', 'Lokpriya Gopinath Bordoloi International', 'Guwahati', 'India'],
+  ['DED', 'Jolly Grant Airport', 'Dehradun', 'India'],
+  ['SXR', 'Sheikh ul-Alam International', 'Srinagar', 'India'],
+  ['IXL', 'Kushok Bakula Rimpochee Airport', 'Leh', 'India'],
+  ['ATQ', 'Sri Guru Ram Dass Jee International', 'Amritsar', 'India'],
+  ['VNS', 'Lal Bahadur Shastri Airport', 'Varanasi', 'India'],
+  ['IDR', 'Devi Ahilya Bai Holkar Airport', 'Indore', 'India'],
+  ['RPR', 'Swami Vivekananda Airport', 'Raipur', 'India'],
+  ['IXR', 'Birsa Munda Airport', 'Ranchi', 'India'],
+  ['IXB', 'Bagdogra Airport', 'Bagdogra', 'India'],
+  ['BBI', 'Biju Patnaik International', 'Bhubaneswar', 'India'],
+  ['VGA', 'Vijayawada Airport', 'Vijayawada', 'India'],
+  ['VTZ', 'Visakhapatnam International', 'Visakhapatnam', 'India'],
+  ['IXM', 'Madurai International', 'Madurai', 'India'],
+  ['CJB', 'Coimbatore International', 'Coimbatore', 'India'],
+  ['IXE', 'Mangaluru International', 'Mangaluru', 'India'],
+  ['TRZ', 'Tiruchirappalli International', 'Tiruchirappalli', 'India'],
+  ['CCJ', 'Kozhikode International', 'Kozhikode', 'India'],
+  ['IXA', 'Maharaja Bir Bikram Airport', 'Agartala', 'India'],
+  ['IMF', 'Imphal International', 'Imphal', 'India'],
+  ['IXZ', 'Veer Savarkar International', 'Port Blair', 'India'],
+  ['UDR', 'Maharana Pratap Airport', 'Udaipur', 'India'],
+  ['JDH', 'Jodhpur Airport', 'Jodhpur', 'India'],
+  ['IXU', 'Aurangabad Airport', 'Aurangabad', 'India'],
+  ['IXD', 'Prayagraj Airport', 'Prayagraj', 'India'],
+  ['STV', 'Surat International', 'Surat', 'India'],
+  ['BHJ', 'Bhuj Airport', 'Bhuj', 'India'],
+  ['GWL', 'Rajmata Vijayaraje Scindia Airport', 'Gwalior', 'India'],
+  ['TIR', 'Tirupati International', 'Tirupati', 'India'],
+  ['HBX', 'Hubballi Airport', 'Hubballi', 'India'],
+  ['IXG', 'Belagavi Airport', 'Belagavi', 'India'],
+  ['SHL', 'Shillong Airport', 'Shillong', 'India'],
+  ['AJL', 'Lengpui Airport', 'Aizawl', 'India'],
+  ['RAJ', 'Rajkot International', 'Rajkot', 'India'],
+  ['PGH', 'Pantnagar Airport', 'Pantnagar', 'India'],
+  ['BPM', 'Begumpet Airport', 'Hyderabad', 'India'],
+];
+
+const US_SEEDS: AirportSeed[] = [
+  ['JFK', 'John F. Kennedy International', 'New York', 'United States'],
+  ['EWR', 'Newark Liberty International', 'Newark', 'United States'],
+  ['LGA', 'LaGuardia Airport', 'New York', 'United States'],
+  ['LAX', 'Los Angeles International', 'Los Angeles', 'United States'],
+  ['ORD', "O'Hare International", 'Chicago', 'United States'],
+  ['MDW', 'Chicago Midway International', 'Chicago', 'United States'],
+  ['ATL', 'Hartsfield-Jackson Atlanta International', 'Atlanta', 'United States'],
+  ['DFW', 'Dallas/Fort Worth International', 'Dallas', 'United States'],
+  ['DAL', 'Dallas Love Field', 'Dallas', 'United States'],
+  ['DEN', 'Denver International', 'Denver', 'United States'],
+  ['SFO', 'San Francisco International', 'San Francisco', 'United States'],
+  ['SEA', 'Seattle-Tacoma International', 'Seattle', 'United States'],
+  ['MIA', 'Miami International', 'Miami', 'United States'],
+  ['BOS', 'Boston Logan International', 'Boston', 'United States'],
+  ['IAH', 'George Bush Intercontinental', 'Houston', 'United States'],
+  ['HOU', 'William P. Hobby Airport', 'Houston', 'United States'],
+  ['PHX', 'Phoenix Sky Harbor International', 'Phoenix', 'United States'],
+  ['LAS', 'Harry Reid International', 'Las Vegas', 'United States'],
+  ['MSP', 'Minneapolis-Saint Paul International', 'Minneapolis', 'United States'],
+  ['DTW', 'Detroit Metropolitan Wayne County', 'Detroit', 'United States'],
+  ['BWI', 'Baltimore/Washington International', 'Baltimore', 'United States'],
+  ['DCA', 'Ronald Reagan Washington National', 'Washington D.C.', 'United States'],
+  ['IAD', 'Washington Dulles International', 'Washington D.C.', 'United States'],
+  ['PHL', 'Philadelphia International', 'Philadelphia', 'United States'],
+  ['CLT', 'Charlotte Douglas International', 'Charlotte', 'United States'],
+  ['MCO', 'Orlando International', 'Orlando', 'United States'],
+  ['FLL', 'Fort Lauderdale-Hollywood International', 'Fort Lauderdale', 'United States'],
+  ['TPA', 'Tampa International', 'Tampa', 'United States'],
+  ['RDU', 'Raleigh-Durham International', 'Raleigh', 'United States'],
+  ['AUS', 'Austin-Bergstrom International', 'Austin', 'United States'],
+  ['PDX', 'Portland International', 'Portland', 'United States'],
+  ['SLC', 'Salt Lake City International', 'Salt Lake City', 'United States'],
+  ['SAN', 'San Diego International', 'San Diego', 'United States'],
+  ['STL', 'St. Louis Lambert International', 'St. Louis', 'United States'],
+  ['MCI', 'Kansas City International', 'Kansas City', 'United States'],
+  ['BNA', 'Nashville International', 'Nashville', 'United States'],
+  ['MSY', 'Louis Armstrong New Orleans International', 'New Orleans', 'United States'],
+  ['CLE', 'Cleveland Hopkins International', 'Cleveland', 'United States'],
+  ['CVG', 'Cincinnati/Northern Kentucky International', 'Cincinnati', 'United States'],
+  ['IND', 'Indianapolis International', 'Indianapolis', 'United States'],
+  ['PIT', 'Pittsburgh International', 'Pittsburgh', 'United States'],
+  ['ANC', 'Ted Stevens Anchorage International', 'Anchorage', 'United States'],
+  ['HNL', 'Daniel K. Inouye International', 'Honolulu', 'United States'],
+  ['OGG', 'Kahului Airport', 'Maui', 'United States'],
+];
+
+const INTL_SEEDS: AirportSeed[] = [
+  ['LHR', 'Heathrow Airport', 'London', 'United Kingdom'],
+  ['LGW', 'Gatwick Airport', 'London', 'United Kingdom'],
+  ['CDG', 'Charles de Gaulle Airport', 'Paris', 'France'],
+  ['FRA', 'Frankfurt Airport', 'Frankfurt', 'Germany'],
+  ['MUC', 'Munich Airport', 'Munich', 'Germany'],
+  ['AMS', 'Amsterdam Schiphol', 'Amsterdam', 'Netherlands'],
+  ['SIN', 'Changi Airport', 'Singapore', 'Singapore'],
+  ['DXB', 'Dubai International', 'Dubai', 'UAE'],
+  ['DOH', 'Hamad International', 'Doha', 'Qatar'],
+  ['HKG', 'Hong Kong International', 'Hong Kong', 'Hong Kong'],
+  ['NRT', 'Narita International', 'Tokyo', 'Japan'],
+  ['HND', 'Haneda Airport', 'Tokyo', 'Japan'],
+  ['ICN', 'Incheon International', 'Seoul', 'South Korea'],
+  ['BKK', 'Suvarnabhumi Airport', 'Bangkok', 'Thailand'],
+  ['IST', 'Istanbul Airport', 'Istanbul', 'Turkey'],
+  ['SYD', 'Sydney Airport', 'Sydney', 'Australia'],
+  ['MEL', 'Melbourne Airport', 'Melbourne', 'Australia'],
+  ['YYZ', 'Toronto Pearson International', 'Toronto', 'Canada'],
+  ['YVR', 'Vancouver International', 'Vancouver', 'Canada'],
+  ['ZRH', 'Zurich Airport', 'Zurich', 'Switzerland'],
+  ['VIE', 'Vienna International', 'Vienna', 'Austria'],
+  ['FCO', 'Leonardo da Vinci International', 'Rome', 'Italy'],
+  ['MAD', 'Adolfo Suárez Madrid-Barajas', 'Madrid', 'Spain'],
+  ['BCN', 'Barcelona-El Prat', 'Barcelona', 'Spain'],
+  ['LIS', 'Humberto Delgado Airport', 'Lisbon', 'Portugal'],
+  ['DUB', 'Dublin Airport', 'Dublin', 'Ireland'],
+  ['KUL', 'Kuala Lumpur International', 'Kuala Lumpur', 'Malaysia'],
+  ['CMB', 'Bandaranaike International', 'Colombo', 'Sri Lanka'],
+  ['MLE', 'Velana International', 'Male', 'Maldives'],
+  ['KTM', 'Tribhuvan International', 'Kathmandu', 'Nepal'],
+  ['PEK', 'Beijing Capital International', 'Beijing', 'China'],
+  ['PVG', 'Shanghai Pudong International', 'Shanghai', 'China'],
+  ['SGN', 'Tan Son Nhat International', 'Ho Chi Minh City', 'Vietnam'],
+  ['HKT', 'Phuket International', 'Phuket', 'Thailand'],
+  ['JED', 'King Abdulaziz International', 'Jeddah', 'Saudi Arabia'],
+  ['RUH', 'King Khalid International', 'Riyadh', 'Saudi Arabia'],
+  ['CAI', 'Cairo International', 'Cairo', 'Egypt'],
+  ['JNB', 'O. R. Tambo International', 'Johannesburg', 'South Africa'],
+  ['CPT', 'Cape Town International', 'Cape Town', 'South Africa'],
+  ['NBO', 'Jomo Kenyatta International', 'Nairobi', 'Kenya'],
+  ['GRU', 'São Paulo–Guarulhos International', 'São Paulo', 'Brazil'],
+  ['EZE', 'Ministro Pistarini International', 'Buenos Aires', 'Argentina'],
+  ['TLV', 'Ben Gurion Airport', 'Tel Aviv', 'Israel'],
+  ['ATH', 'Athens International', 'Athens', 'Greece'],
+  ['OSL', 'Oslo Gardermoen', 'Oslo', 'Norway'],
+  ['CPH', 'Copenhagen Airport', 'Copenhagen', 'Denmark'],
+];
+
+export const DOMESTIC_INDIA_IATAS = INDIA_SEEDS.map((s) => s[0]);
+export const DOMESTIC_US_IATAS = US_SEEDS.map((s) => s[0]);
+
+function toAirport([iata, name, city, country]: AirportSeed, region: Airport['region']): Airport {
+  return { iata, name, city, country, region };
+}
+
 export const airports: Airport[] = [
-  // India Domestic
-  { iata: 'DEL', name: 'Indira Gandhi International', city: 'New Delhi', country: 'India', region: 'domestic-india' },
-  { iata: 'BOM', name: 'Chhatrapati Shivaji Maharaj', city: 'Mumbai', country: 'India', region: 'domestic-india' },
-  { iata: 'BLR', name: 'Kempegowda International', city: 'Bangalore', country: 'India', region: 'domestic-india' },
-  { iata: 'MAA', name: 'Chennai International', city: 'Chennai', country: 'India', region: 'domestic-india' },
-  { iata: 'CCU', name: 'Netaji Subhas Chandra Bose', city: 'Kolkata', country: 'India', region: 'domestic-india' },
-  { iata: 'HYD', name: 'Rajiv Gandhi International', city: 'Hyderabad', country: 'India', region: 'domestic-india' },
-  { iata: 'GOI', name: 'Goa International', city: 'Goa', country: 'India', region: 'domestic-india' },
-  { iata: 'COK', name: 'Cochin International', city: 'Kochi', country: 'India', region: 'domestic-india' },
-  { iata: 'PNQ', name: 'Pune Airport', city: 'Pune', country: 'India', region: 'domestic-india' },
-  { iata: 'AMD', name: 'Sardar Vallabhbhai Patel International', city: 'Ahmedabad', country: 'India', region: 'domestic-india' },
-  { iata: 'JAIPUR', name: 'Jaipur International', city: 'Jaipur', country: 'India', region: 'domestic-india' },
-  { iata: 'JAI', name: 'Jaipur International', city: 'Jaipur', country: 'India', region: 'domestic-india' },
-  { iata: 'LKO', name: 'Chaudhary Charan Singh International', city: 'Lucknow', country: 'India', region: 'domestic-india' },
-  { iata: 'TRV', name: 'Trivandrum International', city: 'Thiruvananthapuram', country: 'India', region: 'domestic-india' },
-  { iata: 'IXC', name: 'Chandigarh Airport', city: 'Chandigarh', country: 'India', region: 'domestic-india' },
-  { iata: 'PAT', name: 'Lok Nayak Jayaprakash Airport', city: 'Patna', country: 'India', region: 'domestic-india' },
-  { iata: 'BHO', name: 'Raja Bhoj Airport', city: 'Bhopal', country: 'India', region: 'domestic-india' },
-  { iata: 'NAG', name: 'Dr. Babasaheb Ambedkar International', city: 'Nagpur', country: 'India', region: 'domestic-india' },
-  { iata: 'IND', name: 'Lokpriya Gopinath Bordoloi International', city: 'Guwahati', country: 'India', region: 'domestic-india' },
-  { iata: 'GAU', name: 'Lokpriya Gopinath Bordoloi International', city: 'Guwahati', country: 'India', region: 'domestic-india' },
-
-  // US Domestic
-  { iata: 'JFK', name: 'John F. Kennedy International', city: 'New York', country: 'United States', region: 'domestic-us' },
-  { iata: 'LAX', name: 'Los Angeles International', city: 'Los Angeles', country: 'United States', region: 'domestic-us' },
-  { iata: 'ORD', name: "O'Hare International", city: 'Chicago', country: 'United States', region: 'domestic-us' },
-  { iata: 'ATL', name: 'Hartsfield-Jackson Atlanta International', city: 'Atlanta', country: 'United States', region: 'domestic-us' },
-  { iata: 'DFW', name: 'Dallas/Fort Worth International', city: 'Dallas', country: 'United States', region: 'domestic-us' },
-  { iata: 'DEN', name: 'Denver International', city: 'Denver', country: 'United States', region: 'domestic-us' },
-  { iata: 'SFO', name: 'San Francisco International', city: 'San Francisco', country: 'United States', region: 'domestic-us' },
-  { iata: 'SEA', name: 'Seattle-Tacoma International', city: 'Seattle', country: 'United States', region: 'domestic-us' },
-  { iata: 'MIA', name: 'Miami International', city: 'Miami', country: 'United States', region: 'domestic-us' },
-  { iata: 'BOS', name: 'Boston Logan International', city: 'Boston', country: 'United States', region: 'domestic-us' },
-  { iata: 'IAH', name: 'George Bush Intercontinental', city: 'Houston', country: 'United States', region: 'domestic-us' },
-  { iata: 'PHX', name: 'Phoenix Sky Harbor International', city: 'Phoenix', country: 'United States', region: 'domestic-us' },
-  { iata: 'LAS', name: 'Harry Reid International', city: 'Las Vegas', country: 'United States', region: 'domestic-us' },
-  { iata: 'MSP', name: 'Minneapolis-Saint Paul International', city: 'Minneapolis', country: 'United States', region: 'domestic-us' },
-  { iata: 'DTW', name: 'Detroit Metropolitan Wayne County', city: 'Detroit', country: 'United States', region: 'domestic-us' },
-
-  // International Hubs
-  { iata: 'LHR', name: 'Heathrow Airport', city: 'London', country: 'United Kingdom', region: 'international' },
-  { iata: 'CDG', name: 'Charles de Gaulle Airport', city: 'Paris', country: 'France', region: 'international' },
-  { iata: 'FRA', name: 'Frankfurt Airport', city: 'Frankfurt', country: 'Germany', region: 'international' },
-  { iata: 'AMS', name: 'Amsterdam Schiphol', city: 'Amsterdam', country: 'Netherlands', region: 'international' },
-  { iata: 'SIN', name: 'Changi Airport', city: 'Singapore', country: 'Singapore', region: 'international' },
-  { iata: 'DXB', name: 'Dubai International', city: 'Dubai', country: 'UAE', region: 'international' },
-  { iata: 'HKG', name: 'Hong Kong International', city: 'Hong Kong', country: 'Hong Kong', region: 'international' },
-  { iata: 'NRT', name: 'Narita International', city: 'Tokyo', country: 'Japan', region: 'international' },
-  { iata: 'ICN', name: 'Incheon International', city: 'Seoul', country: 'South Korea', region: 'international' },
-  { iata: 'BKK', name: 'Suvarnabhumi Airport', city: 'Bangkok', country: 'Thailand', region: 'international' },
-  { iata: 'IST', name: 'Istanbul Airport', city: 'Istanbul', country: 'Turkey', region: 'international' },
-  { iata: 'SYD', name: 'Sydney Airport', city: 'Sydney', country: 'Australia', region: 'international' },
-  { iata: 'MEL', name: 'Melbourne Airport', city: 'Melbourne', country: 'Australia', region: 'international' },
-  { iata: 'YYZ', name: 'Toronto Pearson International', city: 'Toronto', country: 'Canada', region: 'international' },
-  { iata: 'ZRH', name: 'Zurich Airport', city: 'Zurich', country: 'Switzerland', region: 'international' },
-  { iata: 'FCO', name: 'Leonardo da Vinci International', city: 'Rome', country: 'Italy', region: 'international' },
-  { iata: 'KUL', name: 'Kuala Lumpur International', city: 'Kuala Lumpur', country: 'Malaysia', region: 'international' },
-  { iata: 'CMB', name: 'Bandaranaike International', city: 'Colombo', country: 'Sri Lanka', region: 'international' },
-  { iata: 'MLE', name: 'Velana International', city: 'Male', country: 'Maldives', region: 'international' },
-  { iata: 'KTM', name: 'Tribhuvan International', city: 'Kathmandu', country: 'Nepal', region: 'international' },
+  ...INDIA_SEEDS.map((s) => toAirport(s, 'domestic-india')),
+  ...US_SEEDS.map((s) => toAirport(s, 'domestic-us')),
+  ...INTL_SEEDS.map((s) => toAirport(s, 'international')),
 ];
 
 export function searchAirports(query: string): Airport[] {
@@ -75,11 +180,19 @@ export function searchAirports(query: string): Airport[] {
   ).slice(0, 8);
 }
 
-const POPULAR_AIRPORT_IATAS = ['DEL', 'BOM', 'BLR', 'MAA', 'CCU', 'HYD', 'GOI', 'JFK', 'LAX', 'ORD', 'SFO', 'LHR', 'DXB', 'SIN', 'BKK', 'CDG'];
+const POPULAR_AIRPORT_IATAS = ['DEL', 'BOM', 'BLR', 'MAA', 'CCU', 'HYD', 'GOI', 'PNQ', 'JFK', 'LAX', 'ORD', 'SFO', 'LHR', 'DXB', 'SIN', 'BKK', 'CDG', 'DOH', 'SYD', 'KTM'];
 
 export function getPopularAirports(): Airport[] {
-  const popular = POPULAR_AIRPORT_IATAS.map((iata) => airports.find((a) => a.iata === iata)).filter((a): a is Airport => Boolean(a));
-  const rest = airports.filter((a) => !POPULAR_AIRPORT_IATAS.includes(a.iata));
+  const seen = new Set<string>();
+  const popular: Airport[] = [];
+  for (const iata of POPULAR_AIRPORT_IATAS) {
+    const found = airports.find((a) => a.iata === iata);
+    if (found) {
+      popular.push(found);
+      seen.add(iata);
+    }
+  }
+  const rest = airports.filter((a) => !seen.has(a.iata));
   return [...popular, ...rest];
 }
 
@@ -94,4 +207,12 @@ export function getRouteType(origin: string, destination: string): 'domestic-ind
   if (o.region === 'domestic-india' && d.region === 'domestic-india') return 'domestic-india';
   if (o.region === 'domestic-us' && d.region === 'domestic-us') return 'domestic-us';
   return 'international';
+}
+
+export function isDomesticIndiaRoute(origin: string, destination: string): boolean {
+  return DOMESTIC_INDIA_IATAS.includes(origin) && DOMESTIC_INDIA_IATAS.includes(destination);
+}
+
+export function isDomesticUSRoute(origin: string, destination: string): boolean {
+  return DOMESTIC_US_IATAS.includes(origin) && DOMESTIC_US_IATAS.includes(destination);
 }
