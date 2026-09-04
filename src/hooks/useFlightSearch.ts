@@ -5,7 +5,7 @@ export function useFlightSearch() {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [source, setSource] = useState<'mock' | 'ignav' | 'scrappa'>('mock');
+  const [source, setSource] = useState<'ignav'>('ignav');
 
   const searchFlights = useCallback(async (params: FlightSearchParams) => {
     setLoading(true);
@@ -27,13 +27,14 @@ export function useFlightSearch() {
         }),
       });
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error('Failed to search flights');
+        throw new Error(data.message || `Search failed (${response.status}). Please try again.`);
       }
 
-      const data = await response.json();
       setFlights(data.flights || []);
-      setSource(data.source || 'mock');
+      setSource(data.source || 'ignav');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setFlights([]);

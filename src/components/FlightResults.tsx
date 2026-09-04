@@ -9,7 +9,6 @@ interface Props {
   flights: Flight[];
   loading: boolean;
   error: string | null;
-  source: 'mock' | 'ignav' | 'scrappa';
   origin: string;
   destination: string;
   currency: 'USD' | 'INR';
@@ -19,7 +18,7 @@ interface Props {
 
 type SortKey = 'price' | 'duration' | 'stops' | 'departure';
 
-function FlightResults({ flights, loading, error, source, origin, destination, currency, departureDate, booking }: Props) {
+function FlightResults({ flights, loading, error, origin, destination, currency, departureDate, booking }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>('price');
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -97,7 +96,7 @@ function FlightResults({ flights, loading, error, source, origin, destination, c
             {flights.length} flights found
           </h2>
           <p className="text-sm text-gray-500">
-            {origin} → {destination} · {source === 'mock' ? 'Sample data (mock mode)' : `${source} live data`}
+            {origin} → {destination} · Live fares via Ignav API
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">

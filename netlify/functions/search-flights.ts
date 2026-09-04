@@ -1,143 +1,160 @@
 import type { Context } from '@netlify/functions';
-import { isDomesticIndiaRoute, isDomesticUSRoute } from '../../src/data/airports';
 
-interface Flight {
-  id: string;
-  airline: string;
-  airlineCode: string;
-  flightNumber: string;
-  origin: string;
-  destination: string;
-  departureTime: string;
-  arrivalTime: string;
-  duration: string;
-  stops: number;
-  stopCities?: string[];
-  price: number;
-  currency: string;
-  class: string;
+interface IgnavSegment {
+  marketing_carrier_code?: string | null;
+  flight_number?: string | null;
+  operating_carrier_name?: string | null;
+  departure_airport: string;
+  departure_time_local?: string | null;
+  arrival_airport: string;
+  arrival_time_local?: string | null;
+  duration_minutes?: number | null;
 }
 
-const AIRLINE_NAMES: Record<string, string> = {
-  '6E': 'IndiGo', 'SG': 'SpiceJet', 'AI': 'Air India', 'G8': 'GoFirst',
-  'IX': 'Air India Express', 'QP': 'Akasa Air', 'DL': 'Delta', 'UA': 'United',
-  'AA': 'American Airlines', 'WN': 'Southwest', 'B6': 'JetBlue', 'NK': 'Spirit',
-  'F9': 'Frontier', 'SQ': 'Singapore Airlines', 'EK': 'Emirates', 'QR': 'Qatar Airways',
-  'BA': 'British Airways', 'LH': 'Lufthansa', 'AF': 'Air France', 'TK': 'Turkish Airlines',
-  'QF': 'Qantas', 'CX': 'Cathay Pacific', 'JL': 'Japan Airlines', 'KE': 'Korean Air',
-};
+interface IgnavLeg {
+  carrier?: string | null;
+  duration_minutes?: number | null;
+  segments: IgnavSegment[];
+}
 
-const AIRLINES_BY_REGION: Record<string, string[]> = {
-  'domestic-india': ['6E', 'SG', 'AI', 'G8', 'IX', 'QP'],
-  'domestic-us': ['DL', 'UA', 'AA', 'WN', 'B6', 'NK', 'F9'],
-  'international': ['SQ', 'EK', 'QR', 'BA', 'LH', 'AF', 'TK', 'QF', 'CX', 'JL', 'KE'],
-};
+interface IgnavItinerary {
+  price: { amount: number; currency: string; status: string };
+  outbound?: IgnavLeg;
+  inbound?: IgnavLeg | null;
+  legs?: IgnavLeg[];
+  cabin_class?: string | null;
+  ignav_id?: string | null;
+}
 
-function generateMockFlights(origin: string, destination: string, date: string, passengers: number, currency: string): Flight[] {
-  const isDomesticIndia = isDomesticIndiaRoute(origin, destination);
-  const isDomesticUS = isDomesticUSRoute(origin, destination);
+interface IgnavFareResponse {
+  itineraries?: IgnavItinerary[];
+}
 
-  let region = 'international';
-  let basePrice = currency === 'INR' ? 25000 : 400;
-  if (isDomesticIndia) {
-    region = 'domestic-india';
-    basePrice = currency === 'INR' ? 3500 : 60;
-  } else if (isDomesticUS) {
-    region = 'domestic-us';
-    basePrice = currency === 'INR' ? 20000 : 250;
-  }
+const BASE_URL = 'https://ignav.com/api';
 
-  const airlines = AIRLINES_BY_REGION[region] || AIRLINES_BY_REGION['international'];
-  const flights: Flight[] = [];
+function to12h(time: string): string {
+  const match = /T(\d{2}):(\d{2})/.exec(time || '');
+  const raw = match ? `${match[1]}:${match[2]}` : '—';
+  const [h, m] = raw.split(':').map(Number);
+  if (isNaN(h)) return raw;
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hr = h % 12 === 0 ? 12 : h % 12;
+  return `${String(hr).padStart(2, '0')}:${String(m).padStart(2, '0')} ${period}`;
+}
 
-  const hours = [6, 8, 10, 12, 14, 16, 18, 20, 22];
+function minutesToDuration(minutes?: number | null): string {
+  if (minutes == null) return '—';
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
 
-  for (let i = 0; i < 8; i++) {
-    const airlineCode = airlines[i % airlines.length];
-    const flightNum = 1000 + Math.floor(Math.random() * 9000);
-    const depHour = hours[i % hours.length];
-    const durationHrs = isDomesticIndia ? 1 + Math.floor(Math.random() * 3) : isDomesticUS ? 2 + Math.floor(Math.random() * 5) : 5 + Math.floor(Math.random() * 12);
-    const durationMins = Math.floor(Math.random() * 60);
-    const arrHour = (depHour + durationHrs) % 24;
-    const arrMin = durationMins;
+function normalizeItinerary(it: IgnavItinerary, origin: string, destination: string): any {
+  const outbound = it.outbound || (it.legs && it.legs[0]);
+  const segments = (outbound?.segments || []).filter((s) => s.departure_airport || s.arrival_airport);
+  const first = segments[0];
+  const last = segments[segments.length - 1];
 
-    const stops = Math.random() > 0.5 ? 0 : Math.random() > 0.7 ? 2 : 1;
-    const stopCities = stops === 1 ? [stops === 1 ? 'Connecting' : ''] : stops === 2 ? ['Stop 1', 'Stop 2'] : [];
+  const airlineCode = first?.marketing_carrier_code || outbound?.carrier || '—';
+  const airlineName = first?.operating_carrier_name || outbound?.carrier || airlineCode;
+  const depTime = to12h(first?.departure_time_local || '');
+  const arrTime = to12h(last?.arrival_time_local || '');
+  const stops = Math.max(segments.length - 1, 0);
 
-    const priceMultiplier = 1 + (Math.random() * 0.6 - 0.3);
-    const stopsDiscount = stops === 0 ? 1.2 : stops === 1 ? 1 : 0.85;
-    const timeDiscount = depHour >= 6 && depHour <= 8 ? 1.1 : depHour >= 20 ? 0.9 : 1;
-    const price = Math.round(basePrice * priceMultiplier * stopsDiscount * timeDiscount);
+  return {
+    id: it.ignav_id || `${airlineCode}${first?.flight_number || ''}-${origin}-${destination}`,
+    ignavId: it.ignav_id || null,
+    airline: airlineName,
+    airlineCode,
+    flightNumber: `${airlineCode}${first?.flight_number || ''}`,
+    origin: first?.departure_airport || origin,
+    destination: last?.arrival_airport || destination,
+    departureTime: depTime,
+    arrivalTime: arrTime,
+    duration: minutesToDuration(outbound?.duration_minutes),
+    stops,
+    price: it.price.amount,
+    currency: it.price.currency,
+    class: (it.cabin_class || 'economy') === 'premium_economy' ? 'premium-economy' : (it.cabin_class || 'economy'),
+  };
+}
 
-    flights.push({
-      id: `${airlineCode}${flightNum}-${date}`,
-      airline: AIRLINE_NAMES[airlineCode] || airlineCode,
-      airlineCode,
-      flightNumber: `${airlineCode}${flightNum}`,
-      origin,
-      destination,
-      departureTime: `${String(depHour).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
-      arrivalTime: `${String(arrHour).padStart(2, '0')}:${String(arrMin).padStart(2, '0')}`,
-      duration: `${durationHrs}h ${durationMins}m`,
-      stops,
-      stopCities: stops > 0 ? stopCities : undefined,
-      price,
-      currency,
-      class: 'economy',
-    });
-  }
-
-  flights.sort((a, b) => a.price - b.price);
-  return flights;
+function cabinClass(param: string): string {
+  if (param === 'premium-economy' || param === 'premium_economy') return 'premium_economy';
+  return (param || 'economy') as string;
 }
 
 export default async (req: Request, context: Context) => {
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+    return new Response(JSON.stringify({ error: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' }), { status: 405 });
+  }
+
+  const apiKey = process.env.IGNAV_API_KEY;
+  if (!apiKey) {
+    return new Response(
+      JSON.stringify({
+        error: 'NO_API_KEY',
+        message: 'Live flight data is not configured. Add the IGNAV_API_KEY environment variable on Netlify.',
+      }),
+      { status: 503 }
+    );
   }
 
   try {
-    const { origin, destination, departureDate, passengers, currency, tripType, cls } = await req.json();
+    const { origin, destination, departureDate, returnDate, passengers, currency, tripType, cls } = await req.json();
 
     if (!origin || !destination || !departureDate) {
-      return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
+      return new Response(JSON.stringify({ error: 'INVALID_INPUT', message: 'Missing required fields' }), { status: 400 });
     }
 
-    const IGNAV_API_KEY = process.env.IGNAV_API_KEY;
+    const market = currency === 'INR' ? 'IN' : 'US';
+    const endpoint = tripType === 'round-trip' && returnDate ? `${BASE_URL}/fares/round-trip` : `${BASE_URL}/fares/one-way`;
 
-    if (IGNAV_API_KEY) {
-      try {
-        const response = await fetch('https://api.ignav.com/v1/flights/search', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${IGNAV_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            origin,
-            destination,
-            date: departureDate,
-            passengers: passengers || 1,
-            currency: currency || 'USD',
-          }),
-        });
+    const body: Record<string, unknown> = {
+      origin,
+      destination,
+      departure_date: departureDate,
+      adults: passengers || 1,
+      cabin_class: cabinClass(cls),
+      market,
+    };
 
-        if (response.ok) {
-          const data = await response.json();
-          return new Response(JSON.stringify({ flights: data.flights || [], source: 'ignav' }), {
-            headers: { 'Content-Type': 'application/json' },
-          });
-        }
-      } catch (e) {
-        console.log('Ignav API failed, falling back to mock data');
-      }
+    if (tripType === 'round-trip' && returnDate) {
+      body.return_date = returnDate;
     }
 
-    const mockFlights = generateMockFlights(origin, destination, departureDate, passengers || 1, currency || 'USD');
-    return new Response(JSON.stringify({ flights: mockFlights, source: 'mock' }), {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data: IgnavFareResponse = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      return new Response(
+        JSON.stringify({
+          error: 'UPSTREAM_ERROR',
+          message: data && (data as any).detail ? (data as any).detail : `Flight data provider returned ${response.status}. Please try again.`,
+        }),
+        { status: 502 }
+      );
+    }
+
+    const itineraries = data.itineraries || [];
+    const flights = itineraries.map((it) => normalizeItinerary(it, origin, destination));
+
+    return new Response(JSON.stringify({ flights, source: 'ignav' }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
+    console.error('search-flights error:', error);
+    return new Response(
+      JSON.stringify({ error: 'SERVER_ERROR', message: 'Something went wrong while fetching flights. Please try again.' }),
+      { status: 500 }
+    );
   }
 };
