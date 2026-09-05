@@ -170,38 +170,42 @@ export default function FareTrendChart({ trends, currency, userDate }: Props) {
   return (
     <div className="mt-6">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-        <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
-          📈 Live fare trend · cheapest flight per departure date
+        <h4 className="font-marker text-gray-900 text-base font-bold flex items-center gap-1.5">
+          ✏️ Live fare sketch &middot; cheapest flight per departure date
         </h4>
-        <span className="text-[11px] text-gray-400 font-dood">
+        <span className="text-[11px] text-gray-500 font-dood">
           sampled live from {trends.samples} dates over the next ~3 months
         </span>
       </div>
 
-      <div className="relative w-full bg-white/60 rounded-xl border border-gray-200 p-2">
+      <div className="sketch-card paper relative w-full p-2 overflow-hidden">
+        <span className="tape absolute -top-3 right-6 h-7 w-20 rotate-2" aria-hidden="true" />
         <div ref={containerRef} style={{ height: 260 }} className="w-full" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3">
-        <div className="bg-green-50 border border-green-200 rounded-xl px-3 py-2">
-          <div className="text-[11px] font-bold text-green-800 uppercase tracking-wide">Cheapest window</div>
-          <div className="font-black text-lg text-green-700">
+        <div className="sketch-card paper-lined px-3 py-2 relative wiggle-host">
+          <span className="stamp absolute top-1.5 right-1.5 font-marker text-green-800 bg-green-100/80 border-2 border-green-700/60 px-1.5 py-0.5 rounded text-[11px]">💸 best</span>
+          <div className="text-[11px] font-bold text-green-900 font-dood uppercase tracking-wide">Cheapest window</div>
+          <div className="font-marker font-bold text-lg text-green-700">
             {fmtDate(trends.cheapestDate)} · {formatPrice(cheapestDisplay, currency)}
           </div>
-          <div className="text-xs text-green-700 font-dood">
+          <div className="text-xs text-green-800 font-dood">
             {trends.daysToCheapest === 0 ? 'for travel today' : `~${trends.daysToCheapest} days from now`}
           </div>
         </div>
-        <div className="bg-primary-50 border border-primary-200 rounded-xl px-3 py-2">
-          <div className="text-[11px] font-bold text-primary-800 uppercase tracking-wide">Day-of-week tip</div>
-          <div className="text-sm font-semibold text-gray-900">
+        <div className="sketch-card paper-lined px-3 py-2 relative wiggle-host">
+          <span className="stamp absolute top-1.5 right-1.5 font-marker text-primary-800 bg-primary-100/80 border-2 border-primary-700/60 px-1.5 py-0.5 rounded text-[11px]">➜ trend</span>
+          <div className="text-[11px] font-bold text-primary-900 font-dood uppercase tracking-wide">Day-of-week tip</div>
+          <div className="font-dood text-sm font-bold text-gray-900">
             {trends.trend === 'rising' ? '⏰ Prices rise as you wait' : trends.trend === 'falling' ? '🪂 Prices easing further out' : '➖ Prices fairly stable'}
           </div>
-          <div className="text-xs text-gray-600 font-dood">{trendSentence}</div>
+          <div className="text-xs text-gray-700 font-dood">{trendSentence}</div>
         </div>
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-          <div className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Your date</div>
-          <div className="text-sm font-semibold text-gray-900 capitalize">
+        <div className="sketch-card paper-lined px-3 py-2 relative wiggle-host">
+          <span className="stamp absolute top-1.5 right-1.5 font-marker text-amber-800 bg-amber-100/80 border-2 border-amber-700/60 px-1.5 py-0.5 rounded text-[11px]">⭐ mine</span>
+          <div className="text-[11px] font-bold text-amber-900 font-dood uppercase tracking-wide">Your date</div>
+          <div className="font-dood text-sm font-bold text-gray-900 capitalize">
             {userDateSentence ?? 'outside the sampled window — check the calendar closest to it'}
           </div>
         </div>
