@@ -3,6 +3,7 @@ import SearchForm from './components/SearchForm';
 import FlightResults from './components/FlightResults';
 import CouponPanel from './components/CouponPanel';
 import AboutMe from './components/AboutMe';
+import AboutMaker from './components/AboutMaker';
 import CurrencyToggle from './components/CurrencyToggle';
 import CursorCompanion from './components/CursorCompanion';
 import { useFlightSearch } from './hooks/useFlightSearch';
@@ -130,41 +131,8 @@ function App() {
           <AboutMe />
         </section>
 
-        {/* About section */}
-        <section id="about" className="mt-6 scroll-mt-20">
-          <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 border border-gray-100">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span>👩🏻‍💻</span> About the Maker
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="md:col-span-2">
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  Hi! I'm <strong>Ruchi Kandpal</strong>. I built SkySaver because I love finding
-                  insanely good travel deals — and I wanted everyone to have the same superpowers.
-                  This tool hunts for the cheapest flights, flashes airline ratings so you're not
-                  chasing rock-bottom fares on a bad airline, tells you exactly <em>when</em> to
-                  book for the best price, and surfaces coupons that slice even more off the total.
-                </p>
-                <p className="text-gray-700 leading-relaxed">
-                  Whether you're flying domestic in India or going international, SkySaver works in
-                  both ₹ (INR) and $ (USD). Made with 💜 to make travel smarter, not harder.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-primary-50 via-accent-50 to-pink-50 rounded-xl p-6 border border-primary-100 flex flex-col items-center justify-center text-center">
-                <div className="text-5xl mb-3">✈️</div>
-                <div className="font-black text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-600">
-                  Ruchi Kandpal
-                </div>
-                <div className="text-sm text-gray-600 mt-1">Creator · SkySaver</div>
-                <div className="flex items-center gap-1 text-sm text-gray-500 mt-3">
-                  <span>Fly smart.</span>
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold">Save more.</span>
-                  <span>Travel further. 💫</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* About section (reveals on hover) */}
+        <AboutMaker />
       </main>
 
       {/* Footer */}
