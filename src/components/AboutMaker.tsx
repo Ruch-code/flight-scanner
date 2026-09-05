@@ -63,13 +63,24 @@ export default function AboutMaker() {
                       <span>Travel further. 💫</span>
                     </div>
                     <span className="pointer-events-none text-[11px] font-medium text-gray-500 mt-2 animate-pulse">
-                      hover the plane to send feedback 💌
+                      hover me — feedback 💌 & LinkedIn
                     </span>
                   </div>
                 </div>
 
                 <div className="hidden group-hover/fb:block group-focus-within/fb:block absolute top-0 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-full md:mr-3 z-40">
                   <FeedbackPopup />
+                </div>
+
+                <div className="hidden group-hover/fb:block group-focus-within/fb:block absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50">
+                  <a
+                    href="https://www.linkedin.com/in/ruchi-k/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pop-in inline-flex items-center gap-2 rounded-full bg-[#0A66C2] px-4 py-2 text-white text-xs font-bold shadow-lg shadow-blue-200/70 hover:bg-[#004182] hover:-translate-y-0.5 transition-all"
+                  >
+                    <span>💼</span> Ruchi on LinkedIn <span aria-hidden="true">↗</span>
+                  </a>
                 </div>
               </div>
             </div>
