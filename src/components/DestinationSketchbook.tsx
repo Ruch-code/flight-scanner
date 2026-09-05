@@ -6,7 +6,7 @@ interface Props {
   currency: 'USD' | 'INR';
 }
 
-function SightCard({
+function PlaceCard({
   name,
   emoji,
   category,
@@ -25,25 +25,35 @@ function SightCard({
   currency: 'USD' | 'INR';
   index: number;
 }) {
-  const rot = index % 2 === 0 ? 0.7 : -0.7;
   return (
-    <div className="sketch-card h-full" style={{ transform: `rotate(${rot}deg)` }}>
-      <div className="paper paper-lined rounded-lg p-3 h-full pop-in relative" style={{ animationDelay: `${index * 60}ms` }}>
-        <span className="absolute -top-1.5 left-3 h-4 w-8 tape opacity-70 rotate-2" aria-hidden="true" />
-        <div className="text-2xl mb-1">{emoji}</div>
-        <div className="font-dood font-bold text-gray-900 leading-tight text-sm">{name}</div>
-        <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-900/5 text-gray-500 mt-1">
-          {category}
+    <article
+      className="place-card group relative rounded-2xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-primary-200/70 hover:border-primary-200 hover:-translate-y-1 transition-all duration-200 p-4 pop-in"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      <span className="absolute top-3 right-3 text-[10px] font-black text-gray-300">№{index + 1}</span>
+
+      <div className="flex items-start gap-3 mb-2">
+        <span className="place-emoji relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-100 to-accent-100 text-2xl">
+          {emoji}
+          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-accent-400 blur-[5px]" aria-hidden="true" />
         </span>
-        <p className="text-xs text-gray-600 mt-1 font-dood leading-snug">{blurb}</p>
-        <div className="flex gap-2 mt-2 text-[10px] font-bold">
-          <span className={`px-1.5 py-0.5 rounded ${entryCostUsd === 0 ? 'bg-green-100 text-green-700' : 'bg-primary-100 text-primary-700'}`}>
-            {entryCostUsd === 0 ? 'FREE' : formatPrice(convertCurrency(entryCostUsd, 'USD', currency), currency)}
+        <div className="min-w-0">
+          <h3 className="font-bold text-gray-900 leading-tight text-[15px]">{name}</h3>
+          <span className="inline-block mt-0.5 text-[11px] font-semibold text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+            {category}
           </span>
-          <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">⏱ {hours}</span>
         </div>
       </div>
-    </div>
+
+      <p className="text-sm text-gray-600 leading-snug">{blurb}</p>
+
+      <div className="flex flex-wrap gap-2 mt-3 text-xs font-semibold">
+        <span className={`px-2.5 py-1 rounded-full ${entryCostUsd === 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-gradient-to-r from-primary-50 to-accent-50 text-primary-700 border border-primary-100'}`}>
+          {entryCostUsd === 0 ? 'FREE' : formatPrice(convertCurrency(entryCostUsd, 'USD', currency), currency)}
+        </span>
+        <span className="px-2.5 py-1 rounded-full bg-gray-50 text-gray-500 border border-gray-100">⏱ {hours}</span>
+      </div>
+    </article>
   );
 }
 
@@ -58,66 +68,77 @@ export default function DestinationSketchbook({ destination, currency }: Props) 
 
   return (
     <section className="mt-8">
-      <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
-        <h2 className="font-marker text-2xl font-black text-gray-900 flex items-center gap-2">
-          <span className="wiggle">🖍️</span> Destination Sketchbook
-          <span className="text-lg">{guide.flag}</span>
-        </h2>
-        <span className="font-dood text-sm text-gray-500 scribble-underline">what {guide.city} is famous for · drawn fresh ✏️</span>
-      </div>
+      <div className="relative">
+        <div
+          className="absolute -inset-6 rounded-[3rem] bg-gradient-to-r from-primary-200/50 via-accent-200/50 to-primary-200/50 blur-2xl"
+          aria-hidden="true"
+        />
 
-      <div className="sketch-card paper p-5 sm:p-7 relative overflow-hidden">
-        <span className="tape absolute -top-3 left-1/2 -translate-x-1/2 h-7 w-28 -rotate-1" aria-hidden="true" />
+        <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl border border-white/70 shadow-xl p-6 sm:p-8">
+          <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-2xl">🗺️</span>
+                <h2 className="text-2xl sm:text-3xl font-black text-gray-900">
+                  Places to visit in{' '}
+                  <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+                    {guide.city}
+                  </span>{' '}
+                  {guide.flag}
+                </h2>
+              </div>
+              <p className="text-sm text-gray-500">{guide.intro}</p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 shadow-sm">
+              ✨ best time: {guide.bestTime}
+            </span>
+          </div>
 
-        <p className="font-dood text-base text-gray-700 mb-5 max-w-2xl">{guide.intro}</p>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {sights.map((a, i) => (
-            <SightCard
-              key={a.id}
-              name={a.name}
-              emoji={a.emoji}
-              category={a.category}
-              entryCostUsd={a.entryCostUsd}
-              hours={a.hours}
-              blurb={a.blurb}
-              currency={currency}
-              index={i}
-            />
-          ))}
-        </div>
-
-        <div className="mt-6">
-          <div className="font-hand text-lg font-bold text-amber-900 mb-2">🍽️ must eat</div>
-          <div className="flex flex-wrap gap-2">
-            {guide.foodHighlights.map((f) => (
-              <span
-                key={f.name}
-                className="wiggle inline-flex items-center gap-1 font-dood text-xs font-bold bg-white/70 border border-gray-900/25 rounded-full px-3 py-1 text-gray-800"
-              >
-                {f.emoji} {f.name}
-                <span className="text-gray-400 font-normal">· {formatPrice(convertCurrency(f.costUsd, 'USD', currency), currency)}</span>
-              </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {sights.map((a, i) => (
+              <PlaceCard
+                key={a.id}
+                name={a.name}
+                emoji={a.emoji}
+                category={a.category}
+                entryCostUsd={a.entryCostUsd}
+                hours={a.hours}
+                blurb={a.blurb}
+                currency={currency}
+                index={i}
+              />
             ))}
           </div>
-        </div>
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="sketch-card paper-lined p-4 relative">
-            <div className="font-hand text-lg font-bold text-primary-900 mb-2">📌 local know-how</div>
-            <ul className="space-y-1.5">
-              {guide.tips.map((tip) => (
-                <li key={tip} className="font-dood text-sm text-gray-700 flex gap-2">
-                  <span aria-hidden="true">✎</span>
-                  <span>{tip}</span>
-                </li>
+          <div className="mt-6 pt-6 border-t border-gray-200/70">
+            <div className="flex flex-wrap gap-2 mb-3">
+              {guide.foodHighlights.map((f) => (
+                <span
+                  key={f.name}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/90 border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm hover:border-accent-300 hover:-translate-y-0.5 transition-all"
+                  title={`${f.name} · ${formatPrice(convertCurrency(f.costUsd, 'USD', currency), currency)}`}
+                >
+                  {f.emoji} {f.name}
+                  <span className="text-gray-400 font-medium">
+                    · {formatPrice(convertCurrency(f.costUsd, 'USD', currency), currency)}
+                  </span>
+                </span>
               ))}
-            </ul>
-          </div>
-          <div className="sketch-card paper-lined p-4 relative flex flex-col">
-            <div className="font-hand text-lg font-bold text-accent-900 mb-2">🛂 before you fly</div>
-            <p className="font-dood text-sm text-gray-700">{guide.visaNote}</p>
-            <span className="mt-auto pt-3 font-marker text-sm text-gray-400">check current rules — they update!</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs font-semibold">
+              {guide.tips.slice(0, 2).map((tip) => (
+                <span
+                  key={tip}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary-50/80 text-primary-700 border border-primary-100 px-3 py-1.5"
+                >
+                  📌 {tip}
+                </span>
+              ))}
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50/80 text-accent-700 border border-accent-100 px-3 py-1.5">
+                🛂 {guide.visaNote}
+              </span>
+            </div>
           </div>
         </div>
       </div>

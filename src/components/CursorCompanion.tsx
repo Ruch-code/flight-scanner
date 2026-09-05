@@ -106,7 +106,7 @@ export default function CursorCompanion() {
         className="absolute left-0 top-0 text-[26px] leading-none will-change-transform"
         style={{ filter: 'drop-shadow(0 2px 3px rgba(79,70,229,0.35))' }}
       >
-        ✈️
+        🧭
       </div>
     </div>
   );
