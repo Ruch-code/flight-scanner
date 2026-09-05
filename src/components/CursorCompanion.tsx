@@ -9,6 +9,8 @@ export default function CursorCompanion() {
     const coarsePointer = window.matchMedia?.('(pointer: coarse)')?.matches;
     if (prefersReduced || coarsePointer) return;
 
+    document.documentElement.classList.add('cursor-plane');
+
     const plane = planeRef.current;
     const trail = trailRef.current;
     if (!plane || !trail) return;
@@ -80,6 +82,7 @@ export default function CursorCompanion() {
     raf = requestAnimationFrame(step);
 
     return () => {
+      document.documentElement.classList.remove('cursor-plane');
       cancelAnimationFrame(raf);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onDown);

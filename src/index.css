@@ -145,3 +145,11 @@ html {
 .shake:hover {
   animation: shake 0.3s ease-in-out;
 }
+
+/* Hide the native arrow cursor while the paper-plane companion is active */
+@media (pointer: fine) {
+  html.cursor-plane,
+  html.cursor-plane * {
+    cursor: none !important;
+  }
+}
