@@ -59,78 +59,89 @@ function BookingAdvisor({
     routeType === 'domestic-india' ? '🇮🇳 Domestic India' : routeType === 'domestic-us' ? '🇺🇸 Domestic US' : '🌍 International';
 
   return (
-    <div className="sketch-card paper p-5 sm:p-6 relative overflow-hidden">
-      <span className="tape absolute -top-3 left-1/2 -translate-x-1/2 h-7 w-24 -rotate-1" aria-hidden="true" />
+    <div className="relative">
+      <div
+        className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-r from-primary-200/40 via-accent-200/40 to-primary-200/40 blur-2xl"
+        aria-hidden="true"
+      />
 
-      <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🧠</span>
-          <h3 className="font-marker text-xl font-bold text-gray-900 tracking-tight">
-            Smart Booking Advisor
-          </h3>
-        </div>
-        <span className="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white/70 border border-gray-900/30 font-dood uppercase tracking-wide">
-          {routeLabel}
-        </span>
-      </div>
-
-      {urgency && (
-        <div className={`font-dood border-l-4 rounded-r-lg px-4 py-2.5 text-sm font-bold mb-4 ${urgency.color}`}>
-          {urgency.label}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="sketch-card paper-lined p-4 relative wiggle-host">
-          <span className="stamp absolute top-2 right-2 font-marker text-amber-700 bg-amber-100/80 border-2 border-amber-700/60 px-2 py-0.5 rounded">✎ on track</span>
-          <div className="font-hand text-lg font-bold text-amber-900 mb-1">Optimal Booking Window</div>
-          <div className="font-marker font-bold text-gray-900 text-lg">{advice.optimalDays}</div>
-          <p className="font-dood text-sm text-gray-700 mt-1">{advice.tip}</p>
-        </div>
-
-        <div className="sketch-card paper-lined p-4 relative wiggle-host">
-          <span className="stamp absolute top-2 right-2 font-marker text-accent-700 bg-accent-100/80 border-2 border-accent-700/60 px-2 py-0.5 rounded">≈ fair</span>
-          <div className="font-hand text-lg font-bold text-accent-900 mb-1">Price Level</div>
-          <span className={`inline-block text-sm font-bold px-3 py-1 rounded-full mt-0.5 ${levelColors.bg} ${levelColors.text}`}>
-            {levelColors.label}
+      <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl border border-white/70 shadow-xl p-5 sm:p-6">
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🧠</span>
+            <h3 className="text-xl font-black text-gray-900 tracking-tight">
+              Smart Booking Advisor
+            </h3>
+          </div>
+          <span className="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white/90 border border-gray-200 text-gray-600 shadow-sm">
+            {routeLabel}
           </span>
-          <p className="font-dood text-sm text-gray-700 mt-2">{advice.dayOfWeekTip}</p>
         </div>
-      </div>
 
-      {trends && <FareTrendChart trends={trends} currency={currency} userDate={departureDate} />}
+        {urgency && (
+          <div className={`rounded-xl border px-4 py-2.5 text-sm font-bold mb-4 ${urgency.color}`}>
+            {urgency.label}
+          </div>
+        )}
 
-      {trendsLoading && (
-        <div className="mt-6 sketch-card paper p-6 flex items-center justify-center gap-2 text-gray-600 font-dood text-sm">
-          <span className="animate-float">✈️</span> sketching live fares across the next few months…
-        </div>
-      )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl bg-white/80 border border-gray-100 shadow-sm p-4 relative overflow-hidden">
+            <span className="absolute top-2.5 right-2.5 flex items-center gap-1 text-[11px] font-black text-amber-600">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" aria-hidden="true" />
+              on track
+            </span>
+            <div className="text-sm font-bold text-amber-700 mb-1">Optimal Booking Window</div>
+            <div className="text-lg font-black text-gray-900">{advice.optimalDays}</div>
+            <p className="text-sm text-gray-600 mt-1">{advice.tip}</p>
+          </div>
 
-      {trendsError && !trendsLoading && (
-        <div className="mt-6 rounded-lg bg-rose-50 border border-rose-300 font-dood px-4 py-3 text-sm text-rose-700">
-          😢 Live fare trend isn't available right now ({trendsError}). The sketch above still applies.
-        </div>
-      )}
-
-      <div className="mt-5 flex flex-wrap gap-4">
-        <div className="flex-1 min-w-[200px]">
-          <div className="font-hand text-base font-bold text-gray-800 mb-2">Cheapest Months</div>
-          <div className="flex flex-wrap gap-1.5">
-            {advice.bestMonths.map((m) => (
-              <span key={m} className="font-dood text-xs font-bold bg-green-100 text-green-800 px-2.5 py-1 rounded-full border border-green-300">
-                ✓ {m}
-              </span>
-            ))}
+          <div className="rounded-2xl bg-white/80 border border-gray-100 shadow-sm p-4 relative overflow-hidden">
+            <span className="absolute top-2.5 right-2.5 flex items-center gap-1 text-[11px] font-black text-accent-600">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent-400 animate-pulse" aria-hidden="true" />
+              fair
+            </span>
+            <div className="text-sm font-bold text-accent-700 mb-1">Price Level</div>
+            <span className={`inline-block text-sm font-bold px-3 py-1 rounded-full mt-0.5 ${levelColors.bg} ${levelColors.text}`}>
+              {levelColors.label}
+            </span>
+            <p className="text-sm text-gray-600 mt-2">{advice.dayOfWeekTip}</p>
           </div>
         </div>
-        <div className="flex-1 min-w-[200px]">
-          <div className="font-hand text-base font-bold text-gray-800 mb-2">Most Expensive Months</div>
-          <div className="flex flex-wrap gap-1.5">
-            {advice.avoidMonths.map((m) => (
-              <span key={m} className="font-dood text-xs font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-full border border-red-300">
-                ✗ {m}
-              </span>
-            ))}
+
+        {trends && <FareTrendChart trends={trends} currency={currency} userDate={departureDate} />}
+
+        {trendsLoading && (
+          <div className="mt-6 rounded-2xl bg-white/80 border border-white/70 shadow-sm p-6 flex items-center justify-center gap-2 text-gray-600 font-medium text-sm">
+            <span className="animate-float">🎯</span> tuning live fares across the next few months…
+          </div>
+        )}
+
+        {trendsError && !trendsLoading && (
+          <div className="mt-6 rounded-2xl bg-rose-50/90 border border-rose-200 px-4 py-3 text-sm font-medium text-rose-700">
+            😢 Live fare trend isn't available right now ({trendsError}). The booking advice above still applies.
+          </div>
+        )}
+
+        <div className="mt-5 flex flex-wrap gap-4">
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-sm font-bold text-gray-800 mb-2">Cheapest Months</div>
+            <div className="flex flex-wrap gap-1.5">
+              {advice.bestMonths.map((m) => (
+                <span key={m} className="text-xs font-bold bg-green-100 text-green-800 px-2.5 py-1 rounded-full border border-green-200">
+                  ✓ {m}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-sm font-bold text-gray-800 mb-2">Most Expensive Months</div>
+            <div className="flex flex-wrap gap-1.5">
+              {advice.avoidMonths.map((m) => (
+                <span key={m} className="text-xs font-bold bg-red-100 text-red-700 px-2.5 py-1 rounded-full border border-red-200">
+                  ✗ {m}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

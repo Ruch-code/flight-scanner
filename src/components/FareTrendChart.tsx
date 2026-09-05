@@ -58,7 +58,7 @@ export default function FareTrendChart({ trends, currency, userDate }: Props) {
       layout: {
         background: { color: 'transparent' },
         textColor: '#4b5563',
-        fontFamily: "'Architects Daughter', cursive",
+        fontFamily: "'system-ui', -apple-system, 'Segoe UI', Roboto, sans-serif",
         fontSize: 12,
       },
       grid: {
@@ -170,42 +170,42 @@ export default function FareTrendChart({ trends, currency, userDate }: Props) {
   return (
     <div className="mt-6">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-        <h4 className="font-marker text-gray-900 text-base font-bold flex items-center gap-1.5">
-          ✏️ Live fare sketch &middot; cheapest flight per departure date
+        <h4 className="text-gray-900 text-base font-black flex items-center gap-1.5">
+          <span className="text-lg">📈</span> Live fare trends
+          <span className="text-[11px] font-medium text-gray-400">· cheapest flight per departure date</span>
         </h4>
-        <span className="text-[11px] text-gray-500 font-dood">
+        <span className="text-[11px] font-medium text-gray-500">
           sampled live from {trends.samples} dates over the next ~3 months
         </span>
       </div>
 
-      <div className="sketch-card paper relative w-full p-2 overflow-hidden">
-        <span className="tape absolute -top-3 right-6 h-7 w-20 rotate-2" aria-hidden="true" />
+      <div className="relative rounded-2xl bg-white/70 backdrop-blur border border-white/70 shadow-sm p-1.5 overflow-hidden">
         <div ref={containerRef} style={{ height: 260 }} className="w-full" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3">
-        <div className="sketch-card paper-lined px-3 py-2 relative wiggle-host">
-          <span className="stamp absolute top-1.5 right-1.5 font-marker text-green-800 bg-green-100/80 border-2 border-green-700/60 px-1.5 py-0.5 rounded text-[11px]">💸 best</span>
-          <div className="text-[11px] font-bold text-green-900 font-dood uppercase tracking-wide">Cheapest window</div>
-          <div className="font-marker font-bold text-lg text-green-700">
+        <div className="rounded-2xl bg-white/80 border border-gray-100 shadow-sm px-3.5 py-3 relative overflow-hidden">
+          <span className="absolute top-2.5 right-2.5 text-[10px] font-black uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700">💸 best</span>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-700">Cheapest window</div>
+          <div className="text-lg font-black text-emerald-600">
             {fmtDate(trends.cheapestDate)} · {formatPrice(cheapestDisplay, currency)}
           </div>
-          <div className="text-xs text-green-800 font-dood">
+          <div className="text-xs font-medium text-emerald-700">
             {trends.daysToCheapest === 0 ? 'for travel today' : `~${trends.daysToCheapest} days from now`}
           </div>
         </div>
-        <div className="sketch-card paper-lined px-3 py-2 relative wiggle-host">
-          <span className="stamp absolute top-1.5 right-1.5 font-marker text-primary-800 bg-primary-100/80 border-2 border-primary-700/60 px-1.5 py-0.5 rounded text-[11px]">➜ trend</span>
-          <div className="text-[11px] font-bold text-primary-900 font-dood uppercase tracking-wide">Day-of-week tip</div>
-          <div className="font-dood text-sm font-bold text-gray-900">
+        <div className="rounded-2xl bg-white/80 border border-gray-100 shadow-sm px-3.5 py-3 relative overflow-hidden">
+          <span className="absolute top-2.5 right-2.5 text-[10px] font-black uppercase tracking-wide rounded-full px-2 py-0.5 bg-primary-100 text-primary-700">trend</span>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-primary-700">Day-of-week tip</div>
+          <div className="text-sm font-bold text-gray-900">
             {trends.trend === 'rising' ? '⏰ Prices rise as you wait' : trends.trend === 'falling' ? '🪂 Prices easing further out' : '➖ Prices fairly stable'}
           </div>
-          <div className="text-xs text-gray-700 font-dood">{trendSentence}</div>
+          <div className="text-xs font-medium text-gray-600 mt-0.5">{trendSentence}</div>
         </div>
-        <div className="sketch-card paper-lined px-3 py-2 relative wiggle-host">
-          <span className="stamp absolute top-1.5 right-1.5 font-marker text-amber-800 bg-amber-100/80 border-2 border-amber-700/60 px-1.5 py-0.5 rounded text-[11px]">⭐ mine</span>
-          <div className="text-[11px] font-bold text-amber-900 font-dood uppercase tracking-wide">Your date</div>
-          <div className="font-dood text-sm font-bold text-gray-900 capitalize">
+        <div className="rounded-2xl bg-white/80 border border-gray-100 shadow-sm px-3.5 py-3 relative overflow-hidden">
+          <span className="absolute top-2.5 right-2.5 text-[10px] font-black uppercase tracking-wide rounded-full px-2 py-0.5 bg-amber-100 text-amber-700">⭐ mine</span>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-amber-700">Your date</div>
+          <div className="text-sm font-bold text-gray-900 capitalize">
             {userDateSentence ?? 'outside the sampled window — check the calendar closest to it'}
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function FareTrendChart({ trends, currency, userDate }: Props) {
               {hover.vsAvgPct <= 0 ? `${Math.abs(hover.vsAvgPct)}% cheaper` : `${hover.vsAvgPct}% pricier`}
             </b></span>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-200 text-gray-600 font-dood leading-snug">
+          <div className="mt-2 pt-2 border-t border-gray-200 text-gray-600 leading-snug">
             {hover.daysOut >= 0
               ? hover.isCheapest
                 ? 'The cheapest travel date in this window — target this one.'

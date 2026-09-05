@@ -30,14 +30,16 @@ export default function FeedbackPopup() {
   };
 
   return (
-    <div className={`sketch-card paper p-4 w-[min(19rem,90vw)] shadow-2xl ${shake ? 'shake-feedback' : ''}`}>
-      <span className="tape absolute -top-2 left-1/2 -translate-x-1/2 h-4 w-16 rotate-1" aria-hidden="true" />
+    <div className={`rounded-2xl bg-white/90 backdrop-blur-xl border border-white/70 shadow-xl w-[min(19rem,90vw)] p-4 ${shake ? 'shake-feedback' : ''}`}>
+      <div className="mb-3 text-lg font-black text-gray-900 flex items-center gap-1.5">
+        <span className="wiggle">📮</span> feedback for the maker
+      </div>
 
       {sent ? (
         <div className="text-center py-2 pop-in">
           <div className="text-4xl mb-1">💌</div>
-          <div className="font-marker font-bold text-gray-900 text-lg">thanks, it's in the post!</div>
-          <p className="font-dood text-xs text-gray-500 mt-1">saved on your device — the maker reads hearts ✨</p>
+          <div className="font-black text-gray-900 text-lg">thanks, it's in the post!</div>
+          <p className="text-xs font-medium text-gray-500 mt-1">saved on your device — the maker reads hearts ✨</p>
           <button
             type="button"
             onClick={() => {
@@ -45,27 +47,23 @@ export default function FeedbackPopup() {
               setReaction('');
               setMessage('');
             }}
-            className="font-dood text-xs font-bold text-primary-700 underline mt-2"
+            className="text-xs font-bold text-primary-700 underline mt-2"
           >
             send another
           </button>
         </div>
       ) : (
         <div className="pop-in">
-          <div className="flex items-center gap-1 font-marker font-bold text-gray-900 text-base mb-3">
-            <span className="wiggle text-lg">📮</span> feedback for the maker
-          </div>
-
           <div className="space-y-2 mb-2">
             {REACTIONS.map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setReaction(r === reaction ? '' : r)}
-                className={`wiggle font-dood text-xs font-bold w-full text-left px-3 py-1.5 rounded-lg border transition-all ${
+                className={`wiggle text-xs font-bold w-full text-left px-3 py-1.5 rounded-lg border transition-all ${
                   r === reaction
-                    ? 'bg-primary-100 border-primary-400 text-primary-900 scale-105 -rotate-1 shadow'
-                    : 'bg-white/60 border-gray-900/15 text-gray-600'
+                    ? 'bg-primary-100 border-primary-400 text-primary-900 scale-105 shadow'
+                    : 'bg-white/80 border-gray-200 text-gray-600'
                 }`}
               >
                 <span className="mr-1">{r === reaction ? '🔖' : ''}</span>
@@ -77,15 +75,15 @@ export default function FeedbackPopup() {
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="scribble what you think…"
+            placeholder="tell me what you think…"
             rows={3}
-            className="w-full font-dood text-sm bg-white/70 border border-gray-900/20 rounded-lg p-2 outline-none focus:border-primary-400 resize-none"
+            className="w-full text-sm bg-white/80 border border-gray-200 rounded-lg p-2 outline-none focus:border-primary-400 resize-none"
           />
 
           <button
             type="button"
             onClick={submit}
-            className="mt-2 w-full font-marker font-bold text-sm bg-primary-600 text-white rounded-lg py-1.5 hover:bg-primary-700 hover:-rotate-0.5 active:scale-95 transition-all"
+            className="mt-2 w-full font-bold text-sm bg-gradient-to-r from-primary-600 to-accent-500 text-white rounded-lg py-1.5 hover:from-primary-700 hover:to-accent-600 hover:-translate-y-0.5 active:scale-95 transition-all shadow"
           >
             📮 send it
           </button>

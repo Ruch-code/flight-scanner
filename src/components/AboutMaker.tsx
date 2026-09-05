@@ -7,22 +7,24 @@ export default function AboutMaker() {
         <button
           type="button"
           tabIndex={0}
-          className="sketch-card paper px-5 py-2.5 font-marker font-bold text-gray-900 flex items-center gap-2 relative cursor-pointer"
+          className="relative cursor-pointer rounded-2xl bg-white/80 backdrop-blur-md border border-white/70 shadow-lg px-5 py-2.5 font-black text-gray-900 flex items-center gap-2 hover:shadow-xl hover:-translate-y-0.5 hover:shadow-primary-200/70 transition-all"
         >
           <span className="text-lg">👩‍💻</span> About the Maker
-          <span className="text-[11px] text-gray-500 font-dood font-normal normal-case">· hover me to peek</span>
+          <span className="text-[11px] font-medium text-gray-500 normal-case">· hover me to peek</span>
         </button>
-        <span className="pointer-events-none absolute -bottom-6 left-24 font-dood text-xs text-gray-400 animate-pulse whitespace-nowrap">
+        <span className="pointer-events-none absolute -bottom-6 left-24 text-xs font-medium text-gray-400 animate-pulse whitespace-nowrap">
           🙋 step closer…
         </span>
 
         <div className="hidden group-hover:block group-focus-within:block absolute left-0 right-0 top-full mt-4 z-30">
-          <div className="sketch-card paper p-6 md:p-8 relative overflow-visible">
-            <span className="tape absolute -top-3 right-10 h-7 w-24 -rotate-2" aria-hidden="true" />
-
-            <h3 className="font-marker text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <div className="relative rounded-3xl bg-white/80 backdrop-blur-xl border border-white/70 shadow-2xl p-6 md:p-8 overflow-visible">
+            <div
+              className="absolute -inset-4 -z-10 rounded-[3rem] bg-gradient-to-r from-primary-200/40 via-accent-200/40 to-primary-200/40 blur-2xl"
+              aria-hidden="true"
+            />
+            <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
               <span>👩‍💻</span> About the Maker
-              <span className="text-[11px] text-gray-400 font-dood font-normal normal-case">(pulling back the curtain)</span>
+              <span className="text-[11px] font-medium text-gray-400 normal-case">(pulling back the curtain)</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -54,13 +56,13 @@ export default function AboutMaker() {
                     <div className="rainbow-text font-black text-2xl text-white">
                       Ruchi Kandpal
                     </div>
-                    <div className="text-sm text-gray-600 mt-1 font-dood">Creator · SkySaver</div>
+                    <div className="text-sm font-medium text-gray-600 mt-1">Creator · SkySaver</div>
                     <div className="flex items-center gap-1 text-sm font-semibold text-gray-700 mt-3">
                       <span>Fly smart.</span>
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold">Save more.</span>
                       <span>Travel further. 💫</span>
                     </div>
-                    <span className="pointer-events-none font-dood text-[11px] text-gray-500 mt-2 animate-pulse">
+                    <span className="pointer-events-none text-[11px] font-medium text-gray-500 mt-2 animate-pulse">
                       hover the plane to send feedback 💌
                     </span>
                   </div>
