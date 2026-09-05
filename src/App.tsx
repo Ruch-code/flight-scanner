@@ -4,6 +4,7 @@ import FlightResults from './components/FlightResults';
 import CouponPanel from './components/CouponPanel';
 import AboutMe from './components/AboutMe';
 import CurrencyToggle from './components/CurrencyToggle';
+import CursorCompanion from './components/CursorCompanion';
 import { useFlightSearch } from './hooks/useFlightSearch';
 import { useCurrency } from './hooks/useCurrency';
 import { FlightSearchParams } from './types';
@@ -44,6 +45,9 @@ function App() {
         <span className="absolute bottom-20 right-[25%] text-5xl opacity-10 animate-float" style={{ animationDelay: '0.5s' }}>✈️</span>
         <span className="absolute top-[60%] left-[45%] text-3xl opacity-10 animate-float" style={{ animationDelay: '1.5s' }}>✈️</span>
       </div>
+
+      {/* Paper-plane cursor companion */}
+      <CursorCompanion />
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 shadow-lg">
