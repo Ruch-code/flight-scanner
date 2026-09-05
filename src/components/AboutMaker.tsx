@@ -1,3 +1,5 @@
+import FeedbackPopup from './FeedbackPopup';
+
 export default function AboutMaker() {
   return (
     <section id="about" className="mt-6 scroll-mt-20 group">
@@ -37,16 +39,35 @@ export default function AboutMaker() {
                   both ₹ (INR) and $ (USD). Made with 💜 to make travel smarter, not harder.
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-primary-50 via-accent-50 to-pink-50 rounded-xl p-6 border border-primary-100 flex flex-col items-center justify-center text-center">
-                <div className="text-5xl mb-3">✈️</div>
-                <div className="font-black text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-600">
-                  Ruchi Kandpal
+              <div className="group/fb relative">
+                <div className="relative min-h-[240px] rounded-xl border border-white/70 bg-transparent overflow-hidden flex flex-col items-center justify-center text-center px-6">
+                  <span className="rainbow-glow absolute -inset-10 rounded-full" aria-hidden="true" />
+
+                  <span className="cloud" style={{ top: '16%', width: 56, height: 20, opacity: 0.95, animationDuration: '14s' }} aria-hidden="true" />
+                  <span className="cloud" style={{ top: '48%', width: 44, height: 16, opacity: 0.85, transform: 'scale(0.8)', animationDuration: '11s', animationDelay: '-5s' }} aria-hidden="true" />
+                  <span className="cloud" style={{ top: '72%', width: 66, height: 22, opacity: 0.9, transform: 'scale(0.65)', animationDuration: '18s', animationDelay: '-9s' }} aria-hidden="true" />
+
+                  <span className="plane-cross text-2xl" aria-hidden="true">✈️</span>
+
+                  <div className="relative z-10 flex flex-col items-center cursor-pointer" tabIndex={0}>
+                    <div className="text-5xl mb-3 fb-plane">✈️</div>
+                    <div className="rainbow-text font-black text-2xl text-white">
+                      Ruchi Kandpal
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1 font-dood">Creator · SkySaver</div>
+                    <div className="flex items-center gap-1 text-sm font-semibold text-gray-700 mt-3">
+                      <span>Fly smart.</span>
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold">Save more.</span>
+                      <span>Travel further. 💫</span>
+                    </div>
+                    <span className="pointer-events-none font-dood text-[11px] text-gray-500 mt-2 animate-pulse">
+                      hover the plane to send feedback 💌
+                    </span>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">Creator · SkySaver</div>
-                <div className="flex items-center gap-1 text-sm text-gray-500 mt-3">
-                  <span>Fly smart.</span>
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold">Save more.</span>
-                  <span>Travel further. 💫</span>
+
+                <div className="hidden group-hover/fb:block group-focus-within/fb:block absolute top-0 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-full md:mr-3 z-40">
+                  <FeedbackPopup />
                 </div>
               </div>
             </div>

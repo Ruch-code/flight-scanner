@@ -4,6 +4,7 @@ import FlightCard from './FlightCard';
 import { getRouteType } from '../data/airports';
 import { BookingContext } from '../utils/bookingLinks';
 import BookingAdvisor from './BookingAdvisor';
+import DestinationSketchbook from './DestinationSketchbook';
 
 interface Props {
   flights: Flight[];
@@ -152,6 +153,8 @@ function FlightResults({ flights, loading, error, note, origin, destination, cur
           />
         ))}
       </div>
+
+      <DestinationSketchbook destination={destination} currency={currency} />
     </div>
   );
 }
